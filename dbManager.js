@@ -55,7 +55,7 @@ exports.checkPass = function (username, password, cb) {
                 .find({username: username})
                 .value();
 
-            if (user !== null)
+            if (user !== undefined)
                 if (bcrypt.compareSync(password, user.password))
                     return cb(null, user);
             return cb(null, null);

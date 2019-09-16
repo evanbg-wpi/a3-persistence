@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 app.use(require('morgan')('combined'));
 app.use(require('body-parser').urlencoded({extended: true}));
 app.use(require('body-parser').json());
-app.use(require('express-session')({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
+app.use(require('express-session')({secret: 'r2xyZ6bqBgmufbS', resave: false, saveUninitialized: false}));
 const favicon = require('serve-favicon');
 const path = require('path');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

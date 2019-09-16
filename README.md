@@ -3,20 +3,23 @@
 your glitch link e.g. http://a3-charlieroberts.glitch.me
 
 This application allows users to submit their jokes and facts for the entertainment of all! The primary challenges 
-faced during the development of this app were persistent storage across sessions, and creation of user accounts & authentication.
-The local strategy  
-- the goal of the application
-- challenges you faced in realizing the application
-- what authentication strategy / database you chose to use and why (choosing one because it seemed the easiest to implement is perfectly acceptable)
-- what CSS framework you used and why.
-  - include any modifications to the CSS framework you made via custom CSS you authored.
-- the five Express middleware packages you used and a short (one sentence) summary of what each one does.
+I faced during the development of this app were persistent storage across sessions, and creation of user accounts & authentication.
+I used local strategy for passport was chosen for its simplicity, along with bcrypt for basic password hashing. I chose Bootstrap
+as my CSS framework, as it was very well documented, simple, but elegant, and very easy to use. It's very common, so the app has a familiar feel. 
+I made no modifications to the framework.
+
+####Express Middleware packages used:
+- Passport -  A simple, flexible authentication solution for express-based applications.
+- Morgan - An HTTP request logger. Helpful for debugging.
+- Body-Parser - Parsing HTTP request bodies. Used for accessing form and JSON data from the client.
+- Express-session - HTTP session management; Store user data to associate requests with the logged in user.
+- serve-favicon - Set the favicon on all pages without adding a link tag to each page.
 
 ## Technical Achievements
-- **Tech Achievement 1**: I used OAuth authentication via the GitHub strategy
+- **Tech Achievement 1**: I hashed passwords using bcrypt before storing them in the database for better security 
 - **Tech Achievement 2**: I used over ten Express middleware packages, enabling me to create a server that...
 
 ### Design/Evaluation Achievements
-- **Design Achievement 1**: I tested my application using screen reading software, and found that...
-- **Design Achievement 2**: I followed best practices for accessibility, including providing alt attributes for images and using semantic HTML. There are no `<div>` or `<span>` elements in my document.
+- **Design Achievement 1**: I used bootstrap to create a design that was elegant, familiar, and simple. I tried to be consistent with my usage of each type of button.
+- **Design Achievement 2**: 
 - **Design Achievement 3**: We tested the application with n=X users, finding that...
