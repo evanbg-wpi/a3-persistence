@@ -9,6 +9,11 @@
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Sign In</h5>
+                    <div id="alert"
+                    <% if(message) { %> class="alert alert-success"
+                         <% } %>role="alert">
+                        <%= message %>
+                    </div>
                     <form class="form-signin" action="/login" method="post">
                         <input type="text" name="username" class="form-control" placeholder="Username" required
                                autofocus>
@@ -16,7 +21,8 @@
                         <input type="password" name="password" placeholder="Password" class="form-control" required>
                         <br/>
                         <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
-                        <button class="btn btn-link" type="button" onclick="window.location.href='/signup';">Sign up</button>
+                        <button class="btn btn-link" type="button" onclick="window.location.href='/signup';">Sign up
+                        </button>
                     </form>
                 </div>
             </div>

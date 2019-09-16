@@ -14,7 +14,7 @@
 
 <div class="card" style="width: 40%; left: 20px;">
     <div class="card-body" style=" padding-left: 20px;">
-        <h5 class="card-title">Add content</h5>
+        <h5 id="EditorTitle" class="card-title">Add content</h5>
         <form action="/submit" method="post">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="contentType" id="jokeOption"
@@ -31,7 +31,12 @@
             <textarea class="form-control" rows="3" id="contentInput" name="contentInput" style="width: 90%"></textarea>
             <br/>
             <input type="hidden" id="contentID" name="contentID">
-            <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+            <div class="row">
+                <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+                <button class="btn btn-link" id="EditCancel" type="button" onclick="cancelEdit();" hidden>
+                    Cancel Editing
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -66,6 +71,16 @@
         let type = document.getElementById('contentType' + id).innerHTML
         document.getElementById(type.toLowerCase() + 'Option').checked = true;
         document.getElementById('contentID').value = id;
+        document.getElementById('EditorTitle').innerHTML = "Edit content";
+        document.getElementById('EditCancel').hidden = false;
+    }
+    
+    function cancelEdit() {
+        document.getElementById('contentInput').innerHTML = "";
+        document.getElementById('jokeOption').checked = true;
+        document.getElementById('contentID').value = "";
+        document.getElementById('EditorTitle').innerHTML = "Add content";
+        document.getElementById('EditCancel').hidden = true;
     }
 
     function deleteContent(id) {

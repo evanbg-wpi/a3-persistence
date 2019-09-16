@@ -13,17 +13,19 @@ app.use(require('morgan')('combined'));
 app.use(require('body-parser').urlencoded({extended: true}));
 app.use(require('body-parser').json());
 app.use(require('express-session')({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
+const favicon = require('serve-favicon');
+const path = require('path');
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+
 
 passport.use(new Strategy(
     function (username, password, cb) {
-        db.getUser(username, function (err, user) {
+        db.checkPass(username, password, function (err, user) {
             if (err) {
                 return cb(err);
             }
             if (!user) {
-                return cb(null, false);
-            }
-            if (user.password !== password) {
                 return cb(null, false);
             }
             return cb(null, user);
@@ -58,7 +60,7 @@ app.get('/',
 
 app.get('/login',
     function (req, res) {
-        res.render('login');
+        res.render('login', {message: ""});
     });
 
 app.post('/login',
@@ -75,8 +77,8 @@ app.get('/signup',
 app.post('/signup',
     // passport.authenticate('local', {failureRedirect: '/signup'}),
     function (req, res) {
-        db.CreateUser(req.body.username, req.body.displayName, req.body.password);
-        res.redirect('login');
+        if (db.CreateUser(req.body.username, req.body.displayName, req.body.password))
+            res.render('login', {message: "Account created successfully."});
     });
 
 app.post('/submit',
@@ -107,5 +109,5 @@ app.get('/profile',
         res.render('profile', {user: req.user, content: content, readonly: false});
     });
 
-db.CreateUser('evan', 'pass');
+db.CreateUser('evan', 'Evan Goldstein', 'pass');
 app.listen(3000);

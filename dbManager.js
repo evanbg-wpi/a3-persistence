@@ -3,6 +3,9 @@ const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 // Set some defaults (required if your JSON file is empty)
 db.defaults({users: [], content: [], id: 0})
     .write();
@@ -39,30 +42,53 @@ exports.addOrUpdateContent = function (user, type, text, id) {
     }
 };
 
-exports.deleteContent = function(user, contentID) {
+exports.deleteContent = function (user, contentID) {
     console.log("Delete: ", contentID);
     db.get('content')
         .remove({id: contentID})
         .write()
 }
 
+exports.checkPass = function (username, password, cb) {
+    process.nextTick(function () {
+            let user = db.get('users')
+                .find({username: username})
+                .value();
+
+            if (user !== null)
+                if (bcrypt.compareSync(password, user.password))
+                    return cb(null, user);
+            return cb(null, null);
+        }
+    )
+};
+
 exports.getUser = function (username, cb) {
     process.nextTick(function () {
         let user = db.get('users')
             .find({username: username})
             .value();
+
         if (user !== null)
             return cb(null, user);
-        else
+        else {
             return cb(null, null);
-    });
-}
+        }
+    })
+};
 
+/**
+ * @return {boolean}
+ */
 exports.CreateUser = function (username, displayName, password) {
     if (db.get('users').find({username: username}).value() === undefined) {
         console.log("Creating User: ", username);
+        let passHash = bcrypt.hashSync(password, saltRounds);
         db.get('users')
-            .push({username: username, displayName: displayName, password: password})
+            .push({username: username, displayName: displayName, password: passHash})
             .write();
+
+        return true;
     }
+    return false;
 }
