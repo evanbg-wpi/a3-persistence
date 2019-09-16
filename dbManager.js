@@ -35,17 +35,22 @@ exports.addOrUpdateContent = function (user, type, text, id) {
     } else {
         console.log('Updating content ', id);
         let contentStore = db.get('content').find({id: parseInt(id, 10)});
-        console.log(contentStore.value());
         contentStore.assign({type: type, text: text}).value();
     }
 };
+
+exports.deleteContent = function(user, contentID) {
+    console.log("Delete: ", contentID);
+    db.get('content')
+        .remove({id: contentID})
+        .write()
+}
 
 exports.getUser = function (username, cb) {
     process.nextTick(function () {
         let user = db.get('users')
             .find({username: username})
             .value();
-        console.log("Found user: ", user);
         if (user !== null)
             return cb(null, user);
         else

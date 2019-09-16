@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 
 app.use(require('morgan')('combined'));
 app.use(require('body-parser').urlencoded({extended: true}));
-// app.use(require('multer'));
+app.use(require('body-parser').json());
 app.use(require('express-session')({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
 
 passport.use(new Strategy(
@@ -75,6 +75,13 @@ app.post('/submit',
         res.redirect('profile');
     });
 
+app.post('/delete',
+    require('connect-ensure-login').ensureLoggedIn(),
+    function (req, res) {
+        db.deleteContent(req.user, req.body.contentID);
+        res.redirect('profile');
+    });
+
 app.get('/logout',
     function (req, res) {
         req.logout();
@@ -85,7 +92,6 @@ app.get('/profile',
     require('connect-ensure-login').ensureLoggedIn(),
     function (req, res) {
         let content = db.getContentForUser(req.user);
-        console.log(content);
         res.render('profile', {user: req.user, content: content, readonly: false});
     });
 

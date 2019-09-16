@@ -62,13 +62,25 @@
     }
 
     function edit(id) {
-        console.log("Editing entry ", id)
-        console.log('text: ',)
-        console.log('text: ', )
         document.getElementById('contentInput').innerHTML = document.getElementById('contentText' + id).innerHTML
         let type = document.getElementById('contentType' + id).innerHTML
-        document.getElementById(type.toLowerCase()+'Option').checked = true;
+        document.getElementById(type.toLowerCase() + 'Option').checked = true;
         document.getElementById('contentID').value = id;
+    }
+
+    function deleteContent(id) {
+        // let formData = new FormData();
+        // formData.append("contentID", id);
+        //
+        // let request = new XMLHttpRequest();
+        // request.open("POST", "/delete");
+        // request.send(formData);
+        console.log("deleting " + id)
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/delete", true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify({"contentID": id}));
+        location.reload();
     }
 </script>
 </html>

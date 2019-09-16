@@ -22,7 +22,7 @@
                     <% } else { %>
                     <td>
                         <button class="btn btn-info" onclick="edit(<%= content[i].id %>)">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-danger" onclick="deleteContent(<%= content[i].id %>)">Delete</button>
                     </td>
                     <% } %>
                     </td>
