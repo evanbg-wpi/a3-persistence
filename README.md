@@ -1,6 +1,6 @@
 ## Entertainer!
 
-your glitch link e.g. http://a3-charlieroberts.glitch.me
+your glitch link e.g. http://a3-ebgoldstein.glitch.me
 
 This application allows users to submit their jokes and facts for the entertainment of all! The primary challenges 
 I faced during the development of this app were persistent storage across sessions, and creation of user accounts & authentication.
@@ -21,5 +21,6 @@ I made no modifications to the framework.
 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: I used bootstrap to create a design that was elegant, familiar, and simple. I tried to be consistent with my usage of each type of button.
-- **Design Achievement 2**: 
-- **Design Achievement 3**: We tested the application with n=X users, finding that...
+- **Design Achievement 2**: I tested on mobile, and the CSS as well as the layout works well.
+- **Design Achievement 3**: I tested the app with multiple simultaneous users, and found that the sessions are completely separate,
+and that one user can edit and another can view at the same time.
