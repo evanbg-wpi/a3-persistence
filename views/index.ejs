@@ -22,33 +22,14 @@
 <%- include nav.ejs %>
 <header>
     <h1>
-        A Dream of the Future
+        Entertainment
     </h1>
 </header>
 
-<main>
-    <p class="bold">Oh hi,</p>
+<body>
+<%- include content.ejs %>
+</body>
 
-    <p>Tell me your hopes and dreams:</p>
-
-    <form>
-        <input name="dream" type="text" maxlength="100" placeholder="Dreams!" aria-labelledby="submit-dream">
-        <button type="submit" id="submit-dream">Submit Dream</button>
-    </form>
-
-    <section class="dreams">
-        <ul id="dreams"></ul>
-    </section>
-</main>
-
-<footer>
-    Made with <a href="https://glitch.com">Glitch</a>!
-</footer>
-
-<!-- include the Glitch button to show what the webpage is about and
-      to make it easier for folks to view source and remix -->
-<div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-<!--<script src="https://button.glitch.me/button.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

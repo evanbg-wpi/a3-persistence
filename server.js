@@ -11,6 +11,7 @@ app.set('view engine', 'ejs');
 
 app.use(require('morgan')('combined'));
 app.use(require('body-parser').urlencoded({extended: true}));
+// app.use(require('multer'));
 app.use(require('express-session')({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
 
 passport.use(new Strategy(
@@ -49,13 +50,10 @@ passport.deserializeUser(function (username, cb) {
 //   response.sendFile(__dirname + '/views/index.ejs');
 // });
 
-app.get('/index', function (request, response) {
-    response.sendFile(__dirname + '/views/index.ejs');
-});
-
 app.get('/',
     function (req, res) {
-        res.render('index', {user: req.user});
+        let content = db.getAllContent();
+        res.render('index', {user: req.user, content: content, readonly: true});
     });
 
 app.get('/login',
@@ -72,15 +70,15 @@ app.post('/login',
 app.post('/submit',
     require('connect-ensure-login').ensureLoggedIn(),
     function (req, res) {
-        db.addContent(req.user, req.type, req.text);
+        console.log("Body: ", req.body);
+        db.addOrUpdateContent(req.user, req.body.contentType, req.body.contentInput, req.body.contentID);
         res.redirect('profile');
     });
-
 
 app.get('/logout',
     function (req, res) {
         req.logout();
-        res.render('index', {user: req.user});
+        res.redirect('/');
     });
 
 app.get('/profile',
@@ -88,7 +86,9 @@ app.get('/profile',
     function (req, res) {
         let content = db.getContentForUser(req.user);
         console.log(content);
-        res.render('profile', {user: req.user, content: content});
+        res.render('profile', {user: req.user, content: content, readonly: false});
     });
 
+db.CreateUser('evan', 'pass');
+db.addOrUpdateContent('evan', 'Joke', 'test123', 0)
 app.listen(3000);

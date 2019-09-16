@@ -1,3 +1,18 @@
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+const adapter = new FileSync('db.json');
+const db = low(adapter);
+
+// Set some defaults (required if your JSON file is empty)
+db.defaults({users: [], content: [], id: 0})
+    .write();
+
+exports.getAllContent = function () {
+    return db.get('content')
+        .sortBy('type')
+        .value();
+}
+
 exports.getContentForUser = function (user) {
     return db.get('content')
         .filter({username: user.username})
@@ -5,24 +20,25 @@ exports.getContentForUser = function (user) {
         .value();
 };
 
-exports.addContent = function (user, type, text) {
-    let id = db.get('content')
-        .size()
-        .value();
-    console.log("Adding ", type, " for ", user.username, ": ", text);
-    db.get('content')
-        .push({id: id, username: user.username, type: type, text: text})
-        .write();
+exports.addOrUpdateContent = function (user, type, text, id) {
+    if (id === undefined || id === '') {
+        id = db.get('id')
+            .value();
+        console.log("got id: ", id);
+        console.log("new id: ", id + 1);
+        console.log("Adding ", type, " for ", user.username, ": ", text);
+        db.get('content')
+            .push({id: id, username: user.username, type: type, text: text})
+            .write();
+        db.update('id', n => n + 1).write()
+
+    } else {
+        console.log('Updating content ', id);
+        let contentStore = db.get('content').find({id: parseInt(id, 10)});
+        console.log(contentStore.value());
+        contentStore.assign({type: type, text: text}).value();
+    }
 };
-
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const adapter = new FileSync('db.json');
-const db = low(adapter);
-
-// Set some defaults (required if your JSON file is empty)
-db.defaults({users: [], content: []})
-    .write();
 
 exports.getUser = function (username, cb) {
     process.nextTick(function () {
@@ -49,8 +65,10 @@ exports.findById = function (id, cb) {
 }
 
 exports.CreateUser = function (username, password) {
-    console.log("Creating User");
-    db.get('users')
-        .push({username: username, password: password})
-        .write();
+    if (db.get('users').find({username: username}).value() === undefined) {
+        console.log("Creating User: ", username);
+        db.get('users')
+            .push({username: username, password: password})
+            .write();
+    }
 }
