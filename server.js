@@ -67,6 +67,18 @@ app.post('/login',
         res.redirect('profile');
     });
 
+app.get('/signup',
+    function (req, res) {
+        res.render('signup');
+    });
+
+app.post('/signup',
+    // passport.authenticate('local', {failureRedirect: '/signup'}),
+    function (req, res) {
+        db.CreateUser(req.body.username, req.body.displayName, req.body.password);
+        res.redirect('login');
+    });
+
 app.post('/submit',
     require('connect-ensure-login').ensureLoggedIn(),
     function (req, res) {
@@ -96,5 +108,4 @@ app.get('/profile',
     });
 
 db.CreateUser('evan', 'pass');
-db.addOrUpdateContent('evan', 'Joke', 'test123', 0)
 app.listen(3000);

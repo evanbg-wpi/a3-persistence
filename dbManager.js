@@ -58,22 +58,11 @@ exports.getUser = function (username, cb) {
     });
 }
 
-exports.findById = function (id, cb) {
-    process.nextTick(function () {
-        var idx = id - 1;
-        if (records[idx]) {
-            cb(null, records[idx]);
-        } else {
-            cb(new Error('User ' + id + ' does not exist'));
-        }
-    });
-}
-
-exports.CreateUser = function (username, password) {
+exports.CreateUser = function (username, displayName, password) {
     if (db.get('users').find({username: username}).value() === undefined) {
         console.log("Creating User: ", username);
         db.get('users')
-            .push({username: username, password: password})
+            .push({username: username, displayName: displayName, password: password})
             .write();
     }
 }
