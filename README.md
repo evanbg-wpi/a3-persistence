@@ -1,6 +1,6 @@
 ## Entertainer!
 
-your glitch link e.g. http://a3-ebgoldstein.glitch.me
+http://a3-ebgoldstein.glitch.me
 
 This application allows users to submit their jokes and facts for the entertainment of all! The primary challenges 
 I faced during the development of this app were persistent storage across sessions, and creation of user accounts & authentication.
