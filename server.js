@@ -1,45 +1,94 @@
-// server.js
-// where your node app starts
-
-// init project
 const express = require('express');
 const app = express();
+const db = require('./dbManager');
+const passport = require("passport");
+const Strategy = require('passport-local').Strategy;
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
+// const isProduction = process.env.NODE_ENV === 'production';
 
-const adapter = new FileSync('db.json');
-const db = low(adapter);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
-// Set some defaults (required if your JSON file is empty)
-db.defaults({ posts: [], user: {}, count: 0 })
-    .write();
+app.use(require('morgan')('combined'));
+app.use(require('body-parser').urlencoded({extended: true}));
+app.use(require('express-session')({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
 
-// Add a post
-db.get('posts')
-    .push({ id: 1, title: 'lowdb is awesome'})
-    .write();
+passport.use(new Strategy(
+    function (username, password, cb) {
+        db.getUser(username, function (err, user) {
+            if (err) {
+                return cb(err);
+            }
+            if (!user) {
+                return cb(null, false);
+            }
+            if (user.password !== password) {
+                return cb(null, false);
+            }
+            return cb(null, user);
+        });
+    }));
 
-// Set a user using Lodash shorthand syntax
-db.set('user.name', 'typicode')
-    .write();
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Increment count
-db.update('count', n => n + 1)
-    .write();
+passport.serializeUser(function (user, cb) {
+    cb(null, user.username);
+});
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+passport.deserializeUser(function (username, cb) {
+    db.getUser(username, function (err, user) {
+        if (err)
+            return cb(err);
+        cb(null, user);
+    });
+});
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+// app.get('/', function(request, response) {
+//   response.sendFile(__dirname + '/views/index.ejs');
+// });
+
+app.get('/index', function (request, response) {
+    response.sendFile(__dirname + '/views/index.ejs');
 });
 
-// listen for requests :)
-const listener = app.listen(process.env.PORT, function() {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+app.get('/',
+    function (req, res) {
+        res.render('index', {user: req.user});
+    });
+
+app.get('/login',
+    function (req, res) {
+        res.render('login');
+    });
+
+app.post('/login',
+    passport.authenticate('local', {failureRedirect: '/login'}),
+    function (req, res) {
+        res.redirect('profile');
+    });
+
+app.post('/submit',
+    require('connect-ensure-login').ensureLoggedIn(),
+    function (req, res) {
+        db.addContent(req.user, req.type, req.text);
+        res.redirect('profile');
+    });
+
+
+app.get('/logout',
+    function (req, res) {
+        req.logout();
+        res.render('index', {user: req.user});
+    });
+
+app.get('/profile',
+    require('connect-ensure-login').ensureLoggedIn(),
+    function (req, res) {
+        let content = db.getContentForUser(req.user);
+        console.log(content);
+        res.render('profile', {user: req.user, content: content});
+    });
+
+app.listen(3000);
