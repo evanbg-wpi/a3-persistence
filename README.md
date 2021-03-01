@@ -8,7 +8,7 @@ I used local strategy for passport was chosen for its simplicity, along with bcr
 as my CSS framework, as it was very well documented, simple, but elegant, and very easy to use. It's very common, so the app has a familiar feel. 
 I made no modifications to the framework.
 
-####Express Middleware packages used:
+#### Express Middleware packages used:
 - Passport -  A simple, flexible authentication solution for express-based applications.
 - Morgan - An HTTP request logger. Helpful for debugging.
 - Body-Parser - Parsing HTTP request bodies. Used for accessing form and JSON data from the client.
